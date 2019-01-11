@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaAdmin.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1><h:outputText value="USUARIOS" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">En esta tabla, se podra
+                            observar todos los usuarios registrados en el sistema, con sus respectivos datos.</marquee></center>
+                    <p:messages autoUpdate="true"/>
+                    <h:form id="formTabla">
+                        <p:dataTable id="tbl" widgetVar="tablaUsuarios" value="#{mbUsuarios.RetornaDatosUsuarios()}" var="item" 
+                                     selectionMode="single" selection="#{mbUsuarios.seleccionado}"
+                                     paginator="true" rowKey="#{item.ccUsuario}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnCrear btnActualizar FormUsuarios:btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnCrear btnActualizar FormUsuarios:btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaUsuarios').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/>
+                                </p:outputPanel>
+                                <h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Usuarios" />
+                                </h:commandLink>
+                                <!--<h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/pdf.png" width="24"/>
+                                    <p:dataExporter type="pdf" target="tbl"  fileName="Usuarios"/>
+                                </h:commandLink>-->
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.ccUsuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Cedula"/>
+                                </f:facet>
+                                <h:outputText value="#{item.ccUsuario}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nombresusuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre(s)"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombresusuario}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.apellidosusuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Apellido(s)"/>
+                                </f:facet>
+                                <h:outputText value="#{item.apellidosusuario}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.usernamelogin}">
+                                <f:facet name="header">
+                                    <h:outputText value="Username"/>
+                                </f:facet>
+                                <h:outputText value="#{item.usernamelogin}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.telefonousuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Fijo"/>
+                                </f:facet>
+                                <h:outputText value="#{item.telefonousuario}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.celularusuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Celular"/>
+                                </f:facet>
+                                <h:outputText value="#{item.celularusuario}"/>
+                            </p:column>
+                            <p:column colspan="2" filterBy="#{item.correoelectronico}">
+                                <f:facet name="header">
+                                    <h:outputText value="E-mail"/>
+                                </f:facet>
+                                <h:outputText value="#{item.correoelectronico}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idtu.idtu}">
+                                <f:facet name="header">
+                                    <h:outputText value="Tipo Usuario"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idtu.idtu}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton id="btnActualizar" update="FormActualizar:actualizar" value="Editar" icon="ui-icon-refresh" onclick="PF('dlg3').show();" disabled="#{empty mbUsuarios.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnCrear" value="Crear" icon="ui-icon-plus" onclick="PF('dlg2').show();"/>
+                                            </td>
+                                            <td>
+                                                <h:form id="FormUsuarios">  
+                                                    <center>
+                                                        <p:commandButton id="btnEliminar" value="Eliminar" icon="ui-icon-trash" action="#{mbUsuarios.borrar()}" disabled="#{empty mbUsuarios.seleccionado}" onclick="return confirm('Seguro desea eliminar el usuario identificado con T.D. #{mbUsuarios.seleccionado.ccUsuario}');document.reload()" update="formTabla" />
+                                                    </center>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--DIALOGOS CREAR --> 
+                    <center>
+                        <h:form id="FormCrear">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg2" showEffect="explode" hideEffect="explode" height="350" resizable="false">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td><p:outputLabel for="idtu" value="Tipo Usuario"/></td>
+                                            <td><p:selectOneMenu id="idtu" value="#{mbUsuarios.tipo}" style="width:125px">
+                                                    <f:selectItem itemLabel="Tipo de usuario" itemValue="" />
+                                                    <f:selectItem itemLabel="SuperAdministrador" itemValue="1" />
+                                                    <f:selectItem itemLabel="Administrador" itemValue="2" />
+                                                    <f:selectItem itemLabel="Usuario" itemValue="3" />
+                                                </p:selectOneMenu></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Inombresusuario" value="Nombre(s)"/></td>
+                                            <td><p:inputText id="Inombresusuario" value="#{mbUsuarios.usuario.nombresusuario}" placeholder="Nombre(s) del usuario" maxlength="50" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Iapellidosusuario" value="Apellidos"/></td>
+                                            <td><p:inputText id="Iapellidosusuario" value="#{mbUsuarios.usuario.apellidosusuario}" placeholder="Apellidos del usuario" maxlength="50" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Itelefonousuario" value="Teléfono"/></td>
+                                            <td><p:inputMask id="Itelefonousuario" placeholder="Teléfono fijo" value="#{mbUsuarios.usuario.telefonousuario}" mask="999-9999999" maxlength="20"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Icelularusuario" value="Celular"/></td>
+                                            <td><p:inputMask id="Icelularusuario" placeholder="Telécono celular" value="#{mbUsuarios.usuario.celularusuario}" mask="999-9999-999" maxlength="20"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Icorreoelectronico" value="Correo"/></td>
+                                            <td><p:inputText id="Icorreoelectronico" value="#{mbUsuarios.usuario.correoelectronico}" placeholder="Correo electroónico" maxlength="80"  required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Icc_usuario" value="Cedula"/></td>
+                                            <td><p:inputText id="Icc_usuario" value="#{mbUsuarios.usuario.ccUsuario}" placeholder="Número de cedula" maxlength="30"  required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Iusernamelogin" value="Username"/></td>
+                                            <td><p:inputText id="Iusernamelogin" value="#{mbUsuarios.usuario.usernamelogin}" placeholder="Usuario" maxlength="20" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Ipasswordlogin" value="Contraseña"/></td>
+                                            <td><p:password id="Ipasswordlogin" value="#{mbUsuarios.usuario.passwordlogin}" placeholder="Contraseña" maxlength="30" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><p:commandButton icon="ui-icon-pencil" value="Crear Usuario" actionListener="#{mbUsuarios.insertar()}" update="formTabla" onclick='document.reload()'/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>                                
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+                    <!--DIALOGOS ACTUALIZAR --> 
+                    <center>
+                        <h:form id="FormActualizar">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="245" resizable="false">
+                                <p:outputPanel id="actualizar" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td><p:outputLabel for="Unombresusuario" value="Nombre(s)"/></td>
+                                                <td><p:inputText id="Unombresusuario" title="Unombresusuario" value="#{mbUsuarios.seleccionado.nombresusuario}" placeholder="Nombre(s)" required="true" maxlength="50"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uapellidosusuario" value="Apellido(s)"/></td>
+                                                <td><p:inputText id="Uapellidosusuario" title="Uapellidosusuario" value="#{mbUsuarios.seleccionado.apellidosusuario}" placeholder="Apellidos" required="true" maxlength="50"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Utelefonousuario" value="Teléfono"/></td>
+                                                <td><p:inputMask id="Utelefonousuario" placeholder="Teléfono fijo" value="#{mbUsuarios.seleccionado.telefonousuario}" mask="999-9999999" maxlength="20"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ucelularusuario" value="Celular"/></td>
+                                                <td><p:inputMask id="Ucelularusuario" placeholder="Telécono celular" value="#{mbUsuarios.seleccionado.celularusuario}" mask="999-9999-999" maxlength="20"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ucorreoelectronico" value="Correo"/></td>
+                                                <td><p:inputText id="Ucorreoelectronico" title="Ucorreoelectronico" value="#{mbUsuarios.seleccionado.correoelectronico}" placeholder="Correo electrónico" maxlength="80"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Upasswordlogin" value="Contraseña"/></td>
+                                                <td><center>
+                                                        <p:outputLabel id="Upasswordlogin" title="Upasswordlogin" value="#{mbUsuarios.seleccionado.passwordlogin}"  />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><p:commandButton icon="ui-icon-pencil" value="Actualizar Usuario" actionListener="#{mbUsuarios.actualizar(mbUsuarios.seleccionado.ccUsuario)}" onclick="document.reload()" update="formTabla"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

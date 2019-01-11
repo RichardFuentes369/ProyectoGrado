@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaAdmin.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1><h:outputText value="FINCAS" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">En esta tabla, se podra
+                            observar todas las fincas registradas en el sistema, con sus respectivos datos.</marquee></center>
+                    <p:messages autoUpdate="true"/>
+                    <h:form id="formTabla">
+                        <p:dataTable id="tbl" widgetVar="tablaFincas" value="#{mbFinca.RetornaDatosFincas()}" var="item" 
+                                     selectionMode="single" selection="#{mbFinca.seleccionado}"
+                                     paginator="true" rowKey="#{item.nitfinca}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnCrear btnActualizar FormFincas:btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnCrear btnActualizar FormFincas:btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaFincas').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/>
+                                </p:outputPanel>
+                                <h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Fincas" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.idfinca}">
+                                <f:facet name="header">
+                                    <h:outputText value="Id"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idfinca}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nombrefinca}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombrefinca}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nitfinca}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nit"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nitfinca}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.departamento}">
+                                <f:facet name="header">
+                                    <h:outputText value="Depart."/>
+                                </f:facet>
+                                <h:outputText value="#{item.departamento}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.provincia}">
+                                <f:facet name="header">
+                                    <h:outputText value="Provi."/>
+                                </f:facet>
+                                <h:outputText value="#{item.provincia}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.municipio}">
+                                <f:facet name="header">
+                                    <h:outputText value="Munic."/>
+                                </f:facet>
+                                <h:outputText value="#{item.municipio}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.vereda}">
+                                <f:facet name="header">
+                                    <center> <h:outputText value="Vereda"/></center>
+                                </f:facet>
+                                <h:outputText value="#{item.vereda}"/>
+                            </p:column>
+                            <p:column colspan="2" filterBy="#{item.direccion}">
+                                <f:facet name="header">
+                                    <center><h:outputText value="Direccion"/></center>
+                                </f:facet>
+                                <h:outputText value="#{item.direccion}"/>
+                            </p:column> 
+                            <p:column filterBy="#{item.nombredueno}">
+                                <f:facet name="header">
+                                    <center><h:outputText value="Dueño"/></center>
+                                </f:facet>
+                                <h:outputText value="#{item.nombredueno}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.telefono}">
+                                <f:facet name="header">
+                                    <h:outputText value="Teléfono"/>
+                                </f:facet>
+                                <h:outputText value="#{item.telefono}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton id="btnActualizar" update="FormActualizar:actualizar" value="Editar" icon="ui-icon-refresh" onclick="PF('dlg3').show();" disabled="#{empty mbFinca.seleccionado}"/>
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnCrear" value="Crear" icon="ui-icon-plus" onclick="PF('dlg2').show();"/>
+                                            </td>
+                                            <td>
+                                                <h:form id="FormFincas">  
+                                                    <center>
+                                                        <p:commandButton id="btnEliminar" value="Eliminar" icon="ui-icon-trash" action="#{mbFinca.borrar()}" disabled="#{empty mbFinca.seleccionado}" onclick="return confirm('Seguro desea eliminar la finca identificada con el NIT #{mbFinca.seleccionado.nitfinca}');document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--DIALOGOS CREAR --> 
+                    <center>
+                        <h:form id="FormCrear">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg2" showEffect="explode" hideEffect="explode" height="380" resizable="false">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td><p:outputLabel for="Irazonsocial" value="Razon Social(s)"/></td>
+                                            <td><p:inputText id="Irazonsocial" value="#{mbFinca.finca.nombrefinca}" placeholder="Nombre de la finca" maxlength="50" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Init" value="Nit"/></td>
+                                            <td><p:inputText id="Init" value="#{mbFinca.finca.nitfinca}" placeholder="Nit de la finca" maxlength="15" required="true"/></td>
+                                        </tr>   
+                                        <tr>
+                                            <td><p:outputLabel for="Idepartamento" value="Departamento"/></td>
+                                            <td><p:inputText id="Idepartamento" value="#{mbFinca.finca.departamento}" placeholder="Departamento" maxlength="15" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Iprovincia" value="Provincia"/></td>
+                                            <td><p:inputText id="Iprovincia" value="#{mbFinca.finca.provincia}" placeholder="Provincia" maxlength="15" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Imunicipio" value="Municipio"/></td>
+                                            <td><p:inputText id="Imunicipio" value="#{mbFinca.finca.municipio}" placeholder="Municipio" maxlength="15" required="true"/></td>
+                                        </tr>   
+                                        <tr>
+                                            <td><p:outputLabel for="Ivereda" value="Vereda"/></td>
+                                            <td><p:inputText id="Ivereda" value="#{mbFinca.finca.vereda}" placeholder="Vereda" maxlength="15" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Idireccion" value="Direccion"/></td>
+                                            <td><p:inputText id="Idireccion" value="#{mbFinca.finca.direccion}" placeholder="Dirección" maxlength="50" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel value="Cedula del dueño: "/></td>
+                                            <td><p:selectOneMenu filter="true" required="true" value="#{mbFinca.ccCrear}" style="width:160px">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{mbUsuarios.RetornaCCDatosUsuariosFinca()}" var="usuariosfinca"
+                                                                   itemLabel="#{usuariosfinca.ccUsuario}" itemValue="#{usuariosfinca.ccUsuario}"/>
+                                                    <p:ajax update="Idueno" listener="#{mbUsuarios.RetornaNombreDuenoFinca(mbFinca.ccCrear)}"/>
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel value="Nombre del dueño: "/></td>
+                                            <td><center><p:outputLabel id="Idueno" value="#{mbUsuarios.RetornaNombreDuenoFinca(mbFinca.ccCrear)}"/></center></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="ITel" value="Teléfono"/></td>
+                                            <td><p:inputMask id="ITel" placeholder="Teléfono de contacto" value="#{mbFinca.finca.telefono}" mask="999-9999999" maxlength="15"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><p:commandButton icon="ui-icon-pencil" value="Crear Finca" actionListener="#{mbFinca.insertar(mbUsuarios.RetornaNombreDuenoFinca(mbFinca.ccCrear))}" update="formTabla" onclick="document.reload()"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>                                
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+
+                    <!--DIALOGOS ACTUALIZAR --> 
+                    <center>                        
+                        <h:form id="FormActualizar">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="315" resizable="false">
+                                <p:outputPanel id="actualizar" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td><p:outputLabel for="Urazonsocial" value="Razon Social(s)"/></td>
+                                                <td><p:inputText id="Urazonsocial" value="#{mbFinca.seleccionado.nombrefinca}" placeholder="Nombre de la finca" required="true" maxlength="50"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Unit" value="Nit"/></td>
+                                                <td><p:inputText id="Unit" value="#{mbFinca.seleccionado.nitfinca}" placeholder="Nit de la finca" required="true" maxlength="15"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Udepartamento" value="Departamento"/></td>
+                                                <td><p:inputText id="Udepartamento" value="#{mbFinca.seleccionado.departamento}" placeholder="Departamento" required="true" maxlength="15"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uprovincia" value="Provincia"/></td>
+                                                <td><p:inputText id="Uprovincia" value="#{mbFinca.seleccionado.provincia}" placeholder="Provincia" maxlength="15" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Imunicipio" value="Municipio"/></td>
+                                                <td><p:inputText id="Imunicipio" value="#{mbFinca.seleccionado.municipio}" placeholder="Municipio" maxlength="15" required="true"/></td>
+                                            </tr> 
+                                            <tr>
+                                                <td><p:outputLabel for="Uvereda" value="Vereda"/></td>
+                                                <td><p:inputText id="Uvereda" value="#{mbFinca.seleccionado.vereda}" placeholder="Vereda" required="true" maxlength="15"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Udireccion" value="Direccion"/></td>
+                                                <td><p:inputText id="Udireccion" value="#{mbFinca.seleccionado.direccion}" placeholder="Dirección" required="true" maxlength="50"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="UTel" value="Teléfono"/></td>
+                                                <td><p:inputText id="UTel" value="#{mbFinca.seleccionado.telefono}" placeholder="Teléfono de contacto" required="true" maxlength="15"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><p:commandButton icon="ui-icon-pencil" value="Actualizar Finca" actionListener="#{mbFinca.actualizar(mbFinca.seleccionado.nitfinca)}" update="formTabla" onclick="document.reload()"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>        
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+                </f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

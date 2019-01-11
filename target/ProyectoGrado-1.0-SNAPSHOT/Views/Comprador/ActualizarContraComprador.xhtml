@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaComprador.xhtml">
+
+            <ui:define name="content">
+                <center>
+                    <h:form id="ActualizarContrasena" style="background: white; border-radius: 10px;">
+                        <br/><br/><br/><br/>
+                        <center><h2><h:outputText value="ACTUALIZAR CONTRASEÑA" style="font-family: 'Francois One', sans-serif;"/></h2></center>
+                        <br/><center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">Recuerde que luego de Actualizar su contraseña, si esta se actualizo tendra que volver a ingresar al sistema.</marquee></center>
+                        <p:messages autoUpdate="true"/>
+                        <br/><p:password maxlength="23" id="pwd1" value="#{mbUsuarios.newcontrasena}" placeholder="Nueva contraseña" required="true" match="pwd2" label="Password 1" feedback="true" requiredMessage="Se necesita una contraseña"/>
+                        <br/><br/><p:password maxlength="23" id="pwd2" value="#{mbUsuarios.newcontrasena}" placeholder="Verificar contraseña" label="Password 2" required="true" feedback="true" requiredMessage="La contraseñas deben concidir"/>
+                        <br/><br/><br/>
+                        <center><p:commandButton icon="ui-icon-refresh" value="Actualizar" actionListener="#{mbUsuarios.cambiarContrasena2(mbUsuarios.getUserNameU())}" onclick="return confirm('Seguro que desea cambiar la contraseña')"/></center>
+                        <br/><br/><br/>
+                    </h:form>
+                </center>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

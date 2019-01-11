@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../../Plantillas/PlantillaHome.xhtml">
+
+            <ui:define name="content">
+                <h:form>   
+                    <center>                      
+                        <p:messages autoUpdate="true"/>
+                        <table width="1330" style="border-radius: 10px; overflow-x: auto;" bgcolor="#5CA1C1" background="../../Ananidos/demo/img/imgFondo.jpg">
+                            <tbody>
+                                <tr>
+                                    <td>        
+                                        <div align="right">
+                                            <p:panel style="width:300px;height:420px;background: transparent;">
+                                                <h:panelGrid>       
+                                                    <center><img src="../../Ananidos/demo/img/user.png" style="width:150px;height:150px;"/></center>
+                                                    <center>
+                                                        <p:outputLabel style="color: white;background-color:#095D85;border-radius: 5px" for="txtUsuario" value="Usuario"/>
+                                                        <p:inputText id="txtUsuario" value="#{mbLoguin.username}" placeholder="" required="true" requiredMessage="Ingrese el usuario porfavor" maxlength="20"/>
+                                                        <p:outputLabel style="color: white;background-color:#095D85;border-radius: 5px" for="txtPassword" value="Contraseña"/>
+                                                        <p:password id="txtPassword" value="#{mbLoguin.password}" placeholder="" required="true" requiredMessage="Ingrese la contaseña porfavor" maxlength="30"/>
+                                                        <h:column/>
+                                                        <p:commandButton style="color: black" icon="ui-icon-person" value="Iniciar sesión" actionListener="#{mbLoguin.login(event)}"/>
+                                                        <p:commandButton style="color: black" icon="ui-icon-key" value="Olvide mi clave" onclick="PF('dlg2').show();"/>
+                                                        <h:column/>
+                                                        <p:commandButton style="color: black" icon="ui-icon-pencil" value="Registrarse" onclick="PF('dlg3').show();" />
+                                                    </center>
+                                                </h:panelGrid>
+                                            </p:panel>
+                                        </div>
+                                    </td>   
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+                </h:form>
+
+                <h:form id="FormOLvideMiClave">
+                    <p:dialog header="Ingrese los Datos" widgetVar="dlg2" showEffect="explode" hideEffect="bounce" height="160" resizable="false">
+                        <table style="border: transparent">
+                            <tbody>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Uusername" value="Usuario"/></td>
+                                    <td><p:inputText id="Uusername" value="#{mbUsuarios.username}" placeholder="Ingrese su usuario" required="true" maxlength="20"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Upassword" value="Contraseña"/></td>
+                                    <td><p:inputText id="Upassword" value="#{mbUsuarios.password}"  placeholder="Nueva contraseña" required="true" maxlength="30"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Ucorreoelectronico" value="Correo"/></td>
+                                    <td><p:inputText id="Ucorreoelectronico" value="#{mbUsuarios.correoElectronico}"  placeholder="Correo registrado" required="true" maxlength="80"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><p:commandButton icon="ui-icon-refresh" value="Recuperar Cuenta" actionListener="#{mbUsuarios.cambiarContrasena()}" onclick="PF('dlg2').close();"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="FormCrear">
+                    <p:dialog header="Ingrese los Datos" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="320" resizable="false">
+                        <table style="border: transparent">
+                            <tbody>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Nombre" value="Nombre(s)"/></td>
+                                    <td><p:inputText id="Nombre" value="#{mbUsuarios.usuario.nombresusuario}" placeholder="Nombre(s)" maxlength="50" required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Apellido" value="Apellido(s)"/></td>
+                                    <td><p:inputText id="Apellido" value="#{mbUsuarios.usuario.apellidosusuario}" placeholder="Apellidos" maxlength="50" required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Telefono" value="Telefono"/></td>
+                                    <td><p:inputMask id="Telefono" placeholder="Teléfono fijo" value="#{mbUsuarios.usuario.telefonousuario}" mask="999-9999999"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Celular" value="Celular"/></td>
+                                    <td><p:inputMask id="Celular" placeholder="Telécono celular" value="#{mbUsuarios.usuario.celularusuario}" mask="999-9999-999" maxlength="20"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Correo" value="Correo"/></td>
+                                    <td><p:inputText id="Correo" value="#{mbUsuarios.usuario.correoelectronico}" placeholder="Correo electrónico" maxlength="80" required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Cedula" value="Cedula"/></td>
+                                    <td><p:inputText id="Cedula" value="#{mbUsuarios.usuario.ccUsuario}" placeholder="Número de cedula" maxlength="20"  required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Username" value="Username"/></td>
+                                    <td><p:inputText id="Username" value="#{mbUsuarios.usuario.usernamelogin}" placeholder="Usuario" maxlength="20"  required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td><p:outputLabel style="color: black" for="Contraseña" value="Contraseña"/></td>
+                                    <td><p:password id="Contraseña" value="#{mbUsuarios.usuario.passwordlogin}" placeholder="Contraseña" maxlength="30"  required="true"/></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><p:commandButton icon="ui-icon-pencil" value="Registrarme" actionListener="#{mbUsuarios.insertar2()}" onclick="PF('dlg3').close();" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p:dialog>
+
+                </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

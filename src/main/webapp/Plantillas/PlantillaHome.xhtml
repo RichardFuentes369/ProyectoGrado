@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <title>Mora</title> 
+        <link href="../Css/estilo.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css?family=Trocchi" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"/>
+    </h:head>
+
+    <h:body style="background-color: #5CA1C1">
+        <div id="top">
+            <ui:insert name="top">
+                <h:form style="font-style: oblique"> 
+                    <center style="background-color: white; border-radius: 10px">
+                        <h1 style="color: black; font-family: 'Trocchi', serif;"><strong>Sistema de Trazabilidad de la mora<br/>en Santander</strong></h1>
+                    </center><br/>
+                    <p:menubar style="background-color: white">
+                        <p:submenu label="Menú">
+                            <p:menuitem style="color: black" value="Ingresar" url="Ingresar.xhtml" icon="ui-icon-person"/>
+                            <p:menuitem style="color: black" value="Contáctenos" url="Contactenos.xhtml" icon="ui-icon-mail-closed" />
+                        </p:submenu>
+                    </p:menubar>    
+                </h:form>
+            </ui:insert>
+        </div>  
+
+        <div id="content" class="center_content">
+            <br/>
+            <ui:insert name="content">cont</ui:insert>
+        </div>
+
+        <div id="bottom">
+            <br/>
+            <center style="background-color:white; color: black; border-radius: 6px; font-family: 'Lobster', cursive;">
+                <ui:insert name="bottom">Unidades Tecnologicas de Santander<br/>&copy;2018</ui:insert>
+            </center>
+        </div>
+
+    </h:body>
+
+</html>

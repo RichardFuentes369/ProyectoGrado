@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaFinca.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1><h:outputText value="COMUNICACIÓN INTERNA" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">En esta tabla
+                            podra observar los mensajes que le envian los usuarios internos. Podra crear, ver, responder y posteriormente eliminar los mensajes. Se recominda que luego de leerlos, el usuario elimine los mensajes.</marquee></center>
+                    <h:form id="formTabla">
+                        <p:dataTable widgetVar="tablaEmail" value="#{mbEmail.RetornarCorreos2()}" var="item" 
+                                     selectionMode="single" selection="#{mbEmail.seleccionado}"
+                                     paginator="true" rowKey="#{item.idemail}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnver btnCrear btnResponder btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnver btnCrear btnResponder btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaEmail').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/><br/><br/>
+                                    <p:commandButton id="btnCrear" value="Crear Mensaje" icon="ui-icon-plus" onclick="PF('dlg1').show();"/>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.idemail}">
+                                <f:facet name="header">
+                                    <h:outputText value="id"/>
+                                </f:facet>
+                                <center><h:outputText value="#{item.idemail}"/></center>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Fecha Recibido"/>
+                                </f:facet>
+                                <center><h:outputText value="#{mbEmail.convertirFecha(item.fecha)}"/></center>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Hora Recibido"/>
+                                </f:facet>
+                                <center><h:outputText value="#{mbEmail.convertirHora(item.hora)}"/></center>
+                            </p:column>
+                            <p:column filterBy="#{item.ccUserdestinatario.nombresusuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="Remitente"/>
+                                </f:facet>
+                                <center><h:outputText value="#{item.ccUserdestinatario.nombresusuario}"/></center>
+                            </p:column>
+                            <p:column filterBy="#{item.ccUserdestinatario.ccUsuario}">
+                                <f:facet name="header">
+                                    <h:outputText value="c.c."/>
+                                </f:facet>
+                                <center><h:outputText value="#{item.ccUserdestinatario.ccUsuario}"/></center>
+                            </p:column>
+                            <f:facet name="footer">
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton update="ver" id="btnver" value="Ver" icon="ui-icon-search" onclick="PF('dlg2').show();" disabled="#{empty mbEmail.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <p:commandButton update="responder" id="btnResponder" value="Responder" icon="ui-icon-arrowreturn-1-w" onclick="PF('dlg3').show();" disabled="#{empty mbEmail.seleccionado}"/>               
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnEliminar" value="Eliminar" icon="ui-icon-trash" action="#{mbEmail.borrar()}" disabled="#{empty mbEmail.seleccionado}" onclick="return confirm('Seguro que quiere eliminar el mensaje identificado con el id #{mbEmail.seleccionado.idemail}');document.reload()" update="formTabla"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--DIALOGOS VER-->
+                    <center> 
+                        <p:dialog header="Correo" widgetVar="dlg2" showEffect="explode" hideEffect="explode" height="400" width="400" resizable="false" minimizable="true">
+                            <p:outputPanel id="ver" style="text-align:center;">
+                                <center>MENSAJE N° <br/>#{mbEmail.seleccionado.idemail}<br/>
+                                </center><br/><br/>
+                                <center>
+                                    <p:outputLabel value="#{mbEmail.seleccionado.mensaje}" style="width: 200px; height: 200px"/>
+                                </center>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </center>
+
+                    <!--DIALOGOS CREAR --> 
+                    <center>
+                        <h:form>
+                            <p:dialog header="Mensaje" widgetVar="dlg1" showEffect="explode" hideEffect="explode" height="300" resizable="false" minimizable="true">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td><p:outputLabel for="De" value="De"/></td>
+                                            <td><p:outputLabel id="De" value="#{mbCosecha.getCCFinca()}"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Para" value="Para"/></td>
+                                            <td>
+                                                <p:inputText id="Para" value="#{mbEmail.destino}" placeholder="Cc destinatario" required="true" maxlength="30"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Mensaje" value="Mensaje"/></td>
+                                            <td>
+                                                <p:inputTextarea  id="Mensaje" value="#{mbEmail.mensaje}" placeholder="Mensaje" required="true" maxlength="900"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <center>
+                                                    <p:commandButton icon="ui-icon-pencil" value="Enviar" onclick="PF('dlg1').close();"  actionListener="#{mbEmail.insertar(mbCosecha.getCCFinca())}"/>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+                    <!--DIALOGOS RESPONDER --> 
+                    <center> 
+                        <p:dialog header="Mensaje" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="300" resizable="false" minimizable="true">
+                            <p:outputPanel id="responder" style="text-align:center;">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td><p:outputLabel for="De" value="De"/></td>
+                                            <td><p:outputLabel id="De" value="#{mbCosecha.getCCFinca()}"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Para" value="Para"/></td>
+                                            <td>
+                                                <p:outputLabel id="Para" value="#{mbEmail.seleccionado.ccUserdestinatario.ccUsuario}"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Respuesta" value="Respuesta"/></td>
+                                            <td>
+                                                <p:inputTextarea  id="Respuesta" value="#{mbEmail.respuesta}" placeholder="Mensaje" required="true" maxlength="900"/><br/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <center>
+                                                    <h:form>
+                                                        <p:commandButton icon="ui-icon-pencil" value="Enviar" onclick="PF('dlg3').close();" actionListener="#{mbEmail.insertardos(mbFinca.getCClogueado(),mbEmail.seleccionado.ccUserdestinatario.ccUsuario)}"/>
+                                                    </h:form>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </center>
+
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

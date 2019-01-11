@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaFinca.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1><h:outputText value="TRANSPORTE" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">En esta tabla, podra observar el transporte,
+                            de la cosecha de la mora, desde su recolección hasta su entrega final a la finca.</marquee></center>
+                    <h:form id="formTabla">
+                        <p:dataTable id="tbl" widgetVar="tablaTransporte" value="#{mbTransporte.RetornaDatosTransporte()}" var="item" 
+                                     selectionMode="single" selection="#{mbTransporte.seleccionado}"
+                                     paginator="true" rowKey="#{item.idtransporte}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnver btnActualizar FormTransporte:btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnver btnActualizar FormTransporte:btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaTransporte').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/>
+                                </p:outputPanel>
+                                <h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Transporte" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.idtransporte}">
+                                <f:facet name="header">
+                                    <h:outputText value="Transporte"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idtransporte}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idcosecha.idcosecha}">
+                                <f:facet name="header">
+                                    <h:outputText value="Sembrado"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idcosecha.idcosecha}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.fechasalida}">
+                                <f:facet name="header">
+                                    <h:outputText value="F. Salida Recolector"/>
+                                </f:facet>
+                                <h:outputText value="#{mbTransporte.convertirFecha(item.fechasalida)}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.tiemposalida}">
+                                <f:facet name="header">
+                                    <h:outputText value="Hr. Salida Recolector"/>
+                                </f:facet>
+                                <h:outputText value="#{mbTransporte.convertirHora(item.tiemposalida)}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.tiemposalida}">
+                                <f:facet name="header">
+                                    <h:outputText value="Hr. Recogida del Sembrado"/>
+                                </f:facet>
+                                <h:outputText value="#{mbTransporte.convertirHora(item.tiemporecogida)}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.fechallegada}">
+                                <f:facet name="header">
+                                    <h:outputText value="F. Llegada Recolector"/>
+                                </f:facet>
+                                <h:outputText value="#{mbTransporte.convertirFecha(item.fechallegada)}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.tiempollegada}">
+                                <f:facet name="header">
+                                    <h:outputText value="Hr. Llegada Recolector"/>
+                                </f:facet>
+                                <h:outputText value="#{mbTransporte.convertirHora(item.tiempollegada)}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.temperatura}">
+                                <f:facet name="header">
+                                    <h:outputText value="°C"/>
+                                </f:facet>
+                                <h:outputText value="#{item.temperatura}"/>
+                            </p:column>
+
+
+                            <f:facet name="footer">
+                                <table>
+                                    <tbody style="border: transparent">
+                                        <tr>
+                                            <td>
+                                                <p:commandButton update="ver" id="btnver" value="Ver" icon="ui-icon-search" onclick="PF('dlg3').show();" disabled="#{empty mbTransporte.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <p:commandButton update="FormActualizar:actualizar" id="btnActualizar" value="Actualizar" icon="ui-icon-refresh" onclick="PF('dlg4').show();" disabled="#{empty mbTransporte.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <h:form id="FormTransporte">  
+                                                    <center>
+                                                        <p:commandButton id="btnEliminar" value="Eliminar" icon="ui-icon-trash" action="#{mbTransporte.borrar()}" disabled="#{empty mbTransporte.seleccionado}" onclick="return confirm('Seguro desea eliminar el transporte identificado con el id #{mbTransporte.seleccionado.idtransporte}');document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--DIALOGOS VER-->
+                    <center> 
+                        <p:dialog header="Consulta" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="330" width="350" resizable="false" minimizable="true">
+                            <p:outputPanel id="ver" style="text-align:center;">
+                                <center>
+                                    <table border="0">
+                                        <tbody>
+                                            <tr colspan="2" style="color: green">INFORMACIÓN SOBRE EL TRANSPORTE N° <br/>#{mbTransporte.seleccionado.idtransporte}<br/>*</tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Fecha Salida"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.convertirFecha(mbTransporte.seleccionado.fechasalida)}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Hora Salida"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.convertirHora(mbTransporte.seleccionado.tiemposalida)}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Hora Recogida"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.convertirHora(mbTransporte.seleccionado.tiemporecogida)}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Fecha Llegada"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.convertirFecha(mbTransporte.seleccionado.fechallegada)}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Hora Llegada"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.convertirHora(mbTransporte.seleccionado.tiempollegada)}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Temperatura °C"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.seleccionado.temperatura}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel value="Descripción"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel value="#{mbTransporte.seleccionado.descripcion}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: red"><p:outputLabel for="Ucosecha" value="Sembrado"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel id="Ucosecha" title="Ucosecha" value="#{mbTransporte.seleccionado.idcosecha.idcosecha}"  />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>     
+                                </center>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </center>
+
+                    <!--DIALOGOS ACTUALIZAR-->
+                    <center>
+                        <h:form id="FormActualizar">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg4" showEffect="explode" hideEffect="explode" height="450" resizable="false" minimizable="true">
+                                <p:outputPanel id="actualizar" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr style="color: orange">#{mbTransporte.seleccionado.idtransporte}</tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ufsalida" value="Fecha Salida"/></td>
+                                                <td><p:calendar id="Ufsalida" value="#{mbTransporte.seleccionado.fechasalida}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhsalida" value="Hora Salida"/></td>
+                                                <td><p:calendar id="Uhsalida" value="#{mbTransporte.seleccionado.tiemposalida}" locale="es" pattern="HH:mm" timeOnly="true"  /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhrecogida" value="Hora Recogida"/></td>
+                                                <td><p:calendar id="Uhrecogida" value="#{mbTransporte.seleccionado.tiemporecogida}" locale="es" pattern="HH:mm" timeOnly="true"  /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ufllegada" value="Fecha Llegada"/></td>
+                                                <td><p:calendar id="Ufllegada" value="#{mbTransporte.seleccionado.fechallegada}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" mindate="#{mbTransporte.seleccionado.fechasalida}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhllegada" value="Hora Llegada"/></td>
+                                                <td><p:calendar id="Uhllegada" value="#{mbTransporte.seleccionado.tiempollegada}" locale="es" pattern="HH:mm" timeOnly="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Utemperatura" value="Temperatura °C"/></td>
+                                                <td><p:inputText id="Utemperatura" value="#{mbTransporte.seleccionado.temperatura}" placeholder="20" maxlength="3" required="true" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Udescripcion" value="Descripción"/></td>
+                                                <td><p:inputTextarea rows="6" cols="33" id="Udescripcion" value="#{mbTransporte.seleccionado.descripcion}" placeholder="Alguna Descripción" maxlength="300" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ucosecha" value="Sembrado"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel id="Ucosecha" title="Ucosecha" value="#{mbTransporte.seleccionado.idcosecha.idcosecha}"  />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><p:commandButton icon="ui-icon-pencil" value="Actualizar Transporte" actionListener="#{mbTransporte.actualizar(mbTransporte.seleccionado.idtransporte)}" onclick="document.reload()" update="formTabla"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>    
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

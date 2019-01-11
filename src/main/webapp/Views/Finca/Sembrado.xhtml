@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaFinca.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1 ><h:outputText value="SEMBRADOS" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">
+                            En esta tabla, podra observar, actualizar y/o eliminar sus cultivos, ademas podra insertar la fumigación y/o transporte
+                            según lo requiera, tenga en cuenta que el sistema validara que la fumigacion sea apartir de la fecha del cultivo creada,
+                            en cuanto al transporte de la mora, esta debe ser mayor a la fecha del cultivo 5 meses y 7 dias.
+                        </marquee></center>
+                    <h:form id="formTabla">
+                        <p:dataTable id="tbl" widgetVar="tablaCosecha" value="#{mbCosecha.RetornaDatosCosecha()}" var="item" 
+                                     selectionMode="single" selection="#{mbCosecha.seleccionado}"
+                                     paginator="true" rowKey="#{item.idcosecha}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnCrear btnActualizar btnCrearfumi btnCreartran FormCosecha:btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnCrear btnActualizar btnCrearfumi btnCreartran FormCosecha:btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaCosecha').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/>
+                                </p:outputPanel>
+                                <h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Sembrado" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.idcosecha}">
+                                <f:facet name="header">
+                                    <h:outputText value="Cultivo"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idcosecha}"/>
+                            </p:column>
+                            <p:column filterBy="# {item.idcosecha}">
+                                <f:facet name="header">
+                                    <h:outputText value="Cant kg(s)"/>
+                                </f:facet>
+                                <h:outputText value="#{item.cantidad}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="F. Sembrado"/>
+                                </f:facet>
+                                <h:outputText value="#{mbCosecha.convertirFecha(item.fechasembrado)}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Hr Sembrado"/>
+                                </f:facet>
+                                <h:outputText value="#{mbCosecha.convertirHora(item.horasembrado)}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="F. Cosecha"/>
+                                </f:facet>
+                                <h:outputText value="#{mbCosecha.convertirFecha(item.fecharecoleccion)}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Hr Cosecha"/>
+                                </f:facet>
+                                <h:outputText value="#{mbCosecha.convertirHora(item.horarecoleccion)}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nitfinca.nitfinca}" headerText="Finca" filterMatchMode="exact">
+                                <f:facet name="filter">
+                                    <p:selectOneMenu onchange="PF('tablaCosecha').filter()" >
+                                        <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                        <f:selectItems value="#{mbFinca.RetornarNombres()}" var="fincas"
+                                                       itemLabel="#{fincas.nombrefinca}" itemValue="#{fincas.nitfinca}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                                <h:outputText value="#{item.nitfinca.nitfinca}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Activa"/>
+                                </f:facet>
+                                <h:outputText value="#{item.estado.booleanValue()}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton id="btnActualizar" update="FormActualizar:actualizar" value="Actualizar Sembrado" icon="ui-icon-refresh" onclick="PF('dlg3').show();" disabled="#{empty mbCosecha.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnCrear" value="Crear Sembrado" icon="ui-icon-plus" onclick="PF('dlg2').show();"/>
+                                            </td>
+                                            <td>
+                                                <h:form id="FormCosecha">  
+                                                    <center>
+                                                        <p:commandButton id="btnEliminar" value="Eliminar Sembrado" icon="ui-icon-trash" action="#{mbCosecha.borrar()}" disabled="#{empty mbCosecha.seleccionado}" onclick="return confirm('Seguro desea eliminar el sembrado identificado con el id #{mbCosecha.seleccionado.idcosecha}');document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton id="btnCrearfumi" value="Crear Fumigación" update="FormCrearFumigacion:crearfumigacion" icon="ui-icon-plus" onclick="PF('dlg4').show();" disabled="#{empty mbCosecha.seleccionado}"/>
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnCreartran" value="Crear Transporte" update="FormCrearTransporte:creartransporte" icon="ui-icon-plus" onclick="PF('dlg5').show();" disabled="#{empty mbCosecha.seleccionado}"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+
+
+                    <!--DIALOGOS CREAR -->
+                    <center>
+                        <h:form id="FormCrear">  
+                            <p:dialog header="Crear cultivo" widgetVar="dlg2" showEffect="explode" hideEffect="explode" height="220" resizable="false">
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td><p:outputLabel for="Ifsembrado" value="Fecha Sembrado"/></td>
+                                            <td><p:calendar id="Ifsembrado" value="#{mbCosecha.cosecha.fechasembrado}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Ihrsembrado" value="Hora Sembrado"/></td>
+                                            <td><p:calendar id="Ihrsembrado" value="#{mbCosecha.cosecha.horasembrado}" locale="es" pattern="HH:mm" timeOnly="true"  rendered="true" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Icosecha" value="Cantidad kg(s)"/></td>
+                                            <td><p:inputNumber id="Icosecha" value="#{mbCosecha.cosecha.cantidad}" placeholder="0,0" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Iidnitfinca" value="Finca" /></td>
+                                            <td>
+                                                <p:selectOneMenu id="Iidnitfinca" value="#{mbCosecha.nitfinca}" style="width:125px">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="0" />
+                                                    <f:selectItems value="#{mbFinca.RetornarNombres()}" var="fincas"
+                                                                   itemLabel="#{fincas.nombrefinca}" itemValue="#{fincas.nitfinca}"/>
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><p:outputLabel for="Uestadoc" value="Activa"/></td>
+                                            <td><p:inputSwitch id="Uestadoc" value="#{mbCosecha.cosecha.estado}" required="true"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><center>
+                                                    <p:commandButton icon="ui-icon-pencil" value="Crear Cultivo" actionListener="#{mbCosecha.insertar()}" onclick="document.reload()" update="formTabla"/>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>                                
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+                    <!--DIALOGOS ACTUALIZAR-->
+                    <center>
+                        <h:form id="FormActualizar">  
+                            <p:dialog header="Actualizar Cultivo" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="28 0" resizable="false">
+                                <p:outputPanel id="actualizar" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr style="color: orange">#{mbCosecha.seleccionado.idcosecha}</tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ufsembrado" value="Fecha Sembrado"/></td>
+                                                <td><p:calendar id="Ufsembrado" value="#{mbCosecha.seleccionado.fechasembrado}" locale="es" navigator="true" pattern="yyyy-MM-dd" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhrsembrado" value="Hora Sembrado"/></td>
+                                                <td><p:calendar id="Uhrsembrado" value="#{mbCosecha.seleccionado.horasembrado}" locale="es" pattern="HH:mm" timeOnly="true" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Icosecha" value="Cantidad kg(s)"/></td>
+                                                <td><p:inputNumber id="Icosecha" value="#{mbCosecha.seleccionado.cantidad}" placeholder="0,0" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ufrecoleccion" value="Fecha Cosecha"/></td>
+                                                <td><p:calendar id="Ufrecoleccion" value="#{mbCosecha.seleccionado.fecharecoleccion}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" mindate="#{mbCosecha.seleccionado.fechasembrado}" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhrrecoleccion" value="Hora Cosecha"/></td>
+                                                <td><p:calendar id="Uhrrecoleccion" value="#{mbCosecha.seleccionado.horarecoleccion}" locale="es" pattern="HH:mm" timeOnly="true" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uestadoc" value="Estado del Cultivo"/></td>
+                                                <td><p:inputSwitch id="Uestadoc" value="#{mbCosecha.seleccionado.estado}" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><p:commandButton icon="ui-icon-pencil" value="Actualizar Cultivo" actionListener="#{mbCosecha.actualizar(mbCosecha.seleccionado.idcosecha)}" onclick="document.reload()" update="formTabla"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+
+                    <!--DIALOGOS CREAR FUMIGACION -->
+                    <center>
+                        <h:form id="FormCrearFumigacion">  
+                            <p:dialog header="Crear fumigación" widgetVar="dlg4" showEffect="explode" hideEffect="explode" height="170" resizable="false">
+                                <p:outputPanel id="crearfumigacion" style="text-align:center;">
+                                    <p:messages/>
+                                    <table border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td><p:outputLabel for="Iffumigacion" value="Fecha Fumigacion"/></td>
+                                                <td><p:calendar id="Iffumigacion" value="#{mbFumigacion.fumigacion.fechafumigacion}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ihfumigacion" value="Hora Fumigacion"/></td>
+                                                <td><p:calendar id="Ihfumigacion" value="#{mbFumigacion.fumigacion.horafumigacion}" locale="es" pattern="HH:mm:ss" timeOnly="true"  rendered="true" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Inp" value="Nombre Producto"/></td>
+                                                <td><p:inputText id="Inp" value="#{mbFumigacion.fumigacion.nombreproducto}" placeholder="¿Que insecticida?" maxlength="20" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Icosecha" value="Cultivo"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel id="Icosecha" title="Icosecha" value="#{mbCosecha.seleccionado.idcosecha}"  />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <center>
+                                                        <p:commandButton icon="ui-icon-pencil" value="Crear" actionListener="#{mbFumigacion.insertar(mbCosecha.seleccionado.idcosecha,mbCosecha.seleccionado.fechasembrado)}" onclick="document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+
+
+                    <!--DIALOGOS CREAR TRANSPORTE-->
+                    <center>
+                        <h:form id="FormCrearTransporte">  
+                            <p:dialog header="Crear Transporte" widgetVar="dlg5" showEffect="explode" hideEffect="explode" height="150" resizable="false">
+                                <p:outputPanel id="creartransporte" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td><p:outputLabel for="Ifsalida" value="Fecha Salida Recolector"/></td>
+                                                <td><p:calendar id="Ifsalida" value="#{mbTransporte.transporte.fechasalida}" locale="es" navigator="true" pattern="dd-MM-yyyy" rendered="true" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Ihsalida" value="Hora Salida Recolectoer"/></td>
+                                                <td><p:calendar id="Ihsalida" value="#{mbTransporte.transporte.tiemposalida}" locale="es" pattern="HH:mm" timeOnly="true" required="true"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Icosecha" value="Cultivo"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel id="Icosecha" title="Icosecha" value="#{mbCosecha.seleccionado.idcosecha}"  />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <center>
+                                                        <p:commandButton icon="ui-icon-pencil" value="Crear" actionListener="#{mbTransporte.insertar(mbCosecha.seleccionado.idcosecha,mbCosecha.seleccionado.fechasembrado)}" onclick="document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>    
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <title>Perfil Finca</title>
+        <link href="https://fonts.googleapis.com/css?family=Trocchi" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"/>
+        <script>
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora',
+                timeText: 'Tiempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Fecha actual',
+                ampm: false,
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                allDayText: 'Todo el día'
+            };
+        </script>
+    </h:head>
+
+    <h:body style="background-color: #5CA1C1">
+
+        <div id="top">
+            <ui:insert name="top">
+                <h:form style="font-style: oblique"> 
+                    <center style="background-color: royalblue; border-radius: 10px">
+                        <h1 style="color: white; font-family: 'Trocchi', serif;"><strong>Sistema de Trazabilidad de la mora<br/>en Santander</strong></h1>
+                    </center><br/>
+                    <p:menubar style="background-color: white">
+                        <p:submenu label="#{mbCosecha.getUserName()}" icon="ui-icon-person">
+                            <p:menuitem style="color: black" value="Pagina Inicio" url="../Finca/Finca.xhtml" icon="ui-icon-home"/>
+                            <p:menuitem style="color: black"  value="Bandeja de entradas" url="../Finca/EmailFinca.xhtml" icon="ui-icon-mail-open"/>
+                            <p:menuitem style="color: black"  value="Actualizar Contraseña" url="../Finca/ActualizarContraFinca.xhtml" icon="ui-icon-key"/>
+                            <p:separator />
+                            <p:menuitem style="color: black" value="Salir" actionListener="#{mbLoguin.salir()}" icon="ui-icon-power"/>
+                        </p:submenu>
+
+                        <p:submenu label="Sembrados" icon="ui-icon-pencil">
+                            <p:menuitem style="color: black" value="Ver y Editar" url="../Finca/Sembrado.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:separator />
+                            <p:menuitem style="color: black" value="Reporte Sembrados" url="/Cosechas" target="_blank" icon="ui-icon-document"/>
+                        </p:submenu>
+
+                        <p:submenu label="Fumigaciones" icon="ui-icon-pencil">
+                            <p:menuitem style="color: black" value="Ver y Editar" url="../Finca/Fumigacion.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:separator />
+                            <p:menuitem style="color: black" value="Reporte Fumigaciones" url="/Fumigaciones" target="_blank" icon="ui-icon-document"/>
+                        </p:submenu>
+
+                        <p:submenu label="Transporte" icon="ui-icon-cart">
+                            <p:menuitem style="color: black" value="Ver y Editar" url="../Finca/Transporte.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:separator />
+                            <p:menuitem style="color: black" value="Reporte Transporte" url="/Transporte" target="_blank" icon="ui-icon-document"/>
+                        </p:submenu>
+                    </p:menubar>
+                    <center><br/>
+                        <p:menuitem>
+                            <p:clock pattern="HH:mm:ss" mode="server" />
+                        </p:menuitem>
+                    </center>
+                </h:form>
+            </ui:insert>
+            <br/>
+        </div>
+
+        <div id="content" class="center_content" >
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div id="bottom">
+            <br/>
+            <center style="background-color: royalblue; color: white; border-radius: 6px; font-family: 'Lobster', cursive;">
+                <ui:insert name="bottom">Unidades Tecnologicas de Santander<br/>&copy;2018</ui:insert>
+            </center>
+        </div>
+
+    </h:body>
+
+</html>

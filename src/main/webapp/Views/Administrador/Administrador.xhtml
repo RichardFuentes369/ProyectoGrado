@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaAdmin.xhtml">
+
+            <ui:define name="content">
+                <br/>   
+                <h:form style="background: white; border-radius: 10px">
+                    <br/><br/><br/>
+                    <center>                
+                        <table border="0" bgcolor="" style="border-radius: 10px">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <center><h2 style="font-family: 'Francois One', sans-serif;">
+                                                <script>
+                                                    var today = new Date();
+                                                    var hourNow = today.getHours();
+                                                    var greetings;
+
+                                                    if (hourNow >= 18) {
+                                                        greetings = 'Buenas Noches';
+                                                    } else if (hourNow >= 12) {
+                                                        greetings = 'Buenas Tardes';
+                                                    } else if (hourNow >= 0) {
+                                                        greetings = 'Buenos Días';
+                                                    }
+                                                    document.write(greetings);
+                                                </script>
+                                            </h2></center>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><!-- www.tutiempo.net - Ancho:456px - Alto:91px -->
+                                        <div id="TT_yyT11E1kkzDcD8sUXAuzjjzjD6lU1aBlrt1dkZyIqkjEkEk1E">El tiempo - Tutiempo.net</div>
+                                        <script type="text/javascript" src="https://www.tutiempo.net/s-widget/l_yyT11E1kkzDcD8sUXAuzjjzjD6lU1aBlrt1dkZyIqkjEkEk1E"></script></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <center>
+                                            <a href="../../Manuales/ManualAdministrador.pdf" target="_blanck">
+                                                <img src="../../Ananidos/demo/img/pdf.png" style="width: 50px; height: 50px" title="Descargame"/>
+                                            </a>
+                                        </center>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><br/><br/>
+                                        <center><h3 style="font-family: 'Open Sans Condensed', sans-serif;">
+                                                <script>
+                                                    var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                                                    var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+                                                    var f = new Date();
+                                                    document.write(diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear());
+                                                </script>
+                                            </h3>
+                                        </center>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </center>
+                    <br/><br/><br/>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

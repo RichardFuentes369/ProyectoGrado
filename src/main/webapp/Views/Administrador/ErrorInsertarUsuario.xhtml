@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaAdmin.xhtml">
+
+            <ui:define name="content">
+                <form>
+                    <p:fieldset>
+                        <center>
+                            <br/><br/><br/><br/>
+                            <center><h1><font face="arial" color="red">¡Error!</font></h1></center>
+                            <h3>No se puede insertar el usuario porque la cedula de ciudadania, o el 
+                                usernameloguin ya existe</h3>
+                            <br/><br/>
+                            <center><a href="Usuarios.xhtml" style="color: red">Volver</a></center>
+                            <br/><br/>
+                        </center>
+                    </p:fieldset>
+                </form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

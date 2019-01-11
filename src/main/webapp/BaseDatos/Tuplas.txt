@@ -1,0 +1,20 @@
+--Tabla tipo usuario
+
+insert into tipousuario (idtu,nombretu,caracteristicas) VALUES (1,'Superadministrador','usuario,finca');
+insert into tipousuario (idtu,nombretu,caracteristicas) VALUES (2,'Administrador','cosecha,fumigacion y transporte');
+insert into tipousuario (idtu,nombretu,caracteristicas) VALUES (3,'Usuario','cosechas activas');
+
+--Tabla usuario
+
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('1098785729','Javier Ricardo','Baron Fuentes','jrbaron','12345','037-6390751','320-389-7294','javierbaron6@gmail.com',1);
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('91216678','Jhovanny','Caballero Plata','Jcplata','12345','037-6790415','311-398-0028','jhovannycaballero@hotmail.com',2);
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('63274589','Laura Cecilia','Guevara Arciniegas','lguevara','12345','037-6339874','315-255-7096','lauraceciliaguevara87@gmail.com',2);
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('1098758632','Jese Vladimir','Quiroga Quiroga','jequiro','12345','037-6005632','310-355-7779','jese_92@yahoo.es',2);
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('91216615','Jorge Enrique','Baron Robles','jerobles','12345','037-6390751','319-299-1031','jorbaron57@hotmail.com',3);
+insert into usuario (cc_usuario,nombresusuario,apellidosusuario,usernamelogin,passwordlogin,telefonousuario,celularusuario,correoelectronico,idtu) VALUES ('63285099','Esperanza','Rodriguez Regifo','esrregifo','12345','037-6076324','300-983-2749','pera.regifo@gmail.com',3);
+
+--Tabla finca
+
+insert into finca (idfinca,nombrefinca,nitfinca,departamento,provincia,vereda,direccion,nombredueno,telefono,cc_user,municipio) VALUES ('1','La peña','00001','Santander','Soto','Rinconada','Lot 5 maz 32 no 105-36','Jhovanny Caballero Plata','311-398-0028','91216678','Charta');
+insert into finca (idfinca,nombrefinca,nitfinca,departamento,provincia,vereda,direccion,nombredueno,telefono,cc_user,municipio) VALUES ('2','Finca nuevo milenio','00002','Santander','Soto','Planadas','Lot 37 no 85-128','Laura Cecilia Guevara Arciniegas','315-255-7096','63274589','Piedecuesta');
+insert into finca (idfinca,nombrefinca,nitfinca,departamento,provincia,vereda,direccion,nombredueno,telefono,cc_user,municipio) VALUES ('3','El eucalipto','00003','Santander','Vélez','El guamal','Lot 5 maz 32 no 105-36','Jese Vladimir Quiroga Quiroga','310-355-7779','1098758632','Bolivar');

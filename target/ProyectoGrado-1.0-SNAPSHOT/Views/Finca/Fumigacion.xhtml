@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../Plantillas/PlantillaFinca.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <center><h1><h:outputText value="FUMIGACIONES" style="font-family: 'Francois One', sans-serif;"/></h1></center>
+                    <center><marquee style="color: black" width="80%" scrolldelay="100" direction="left" loop="infinite">En esta tabla, podra observar, actualizar y/o eliminar las fumigaciones de sus cultivos</marquee></center>
+                    <h:form id="formTabla">
+                        <p:dataTable id="tbl" widgetVar="tablaCosecha" value="#{mbFumigacion.RetornaDatosFumigacion()}" var="item" 
+                                     selectionMode="single" selection="#{mbFumigacion.seleccionado}"
+                                     paginator="true" rowKey="#{item.idfumigacion}" rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50" reflow="true">
+
+                            <p:ajax event="rowSelect"   update="btnActualizar  FormFumigacion:btnEliminar"/>
+                            <p:ajax event="rowUnselect" update="btnActualizar  FormFumigacion:btnEliminar"/>
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <p:inputText id="globalFilter" onkeyup="PF('tablaFumigaciones').filter()"
+                                                 style="width: 180px" placeholder="Buscar"/>
+                                </p:outputPanel>
+                                <h:commandLink>
+                                    <p:graphicImage url="../../Ananidos/demo/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbl" fileName="Fumigacion" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column selectRow="true" style="width:16px;text-align:center"/>
+                            <p:column filterBy="#{item.idfumigacion}">
+                                <f:facet name="header">
+                                    <h:outputText value="Fumigación"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idfumigacion}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="F. Fumigación"/>
+                                </f:facet>
+                                <h:outputText value="#{mbFumigacion.convertirFecha(item.fechafumigacion)}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Hr Fumigación"/>
+                                </f:facet>
+                                <h:outputText value="#{mbFumigacion.convertirHora(item.horafumigacion)}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nombreproducto}">
+                                <f:facet name="header">
+                                    <h:outputText value="Producto"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombreproducto}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idcosecha.idcosecha}">
+                                <f:facet name="header">
+                                    <h:outputText value="Sembrado"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idcosecha.idcosecha}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <table style="border: transparent">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p:commandButton id="btnActualizar" update="FormActualizar:actualizar" value="Actualizar" icon="ui-icon-refresh" onclick="PF('dlg3').show();" disabled="#{empty mbFumigacion.seleccionado}" />
+                                            </td>
+                                            <td>
+                                                <h:form id="FormFumigacion">  
+                                                    <center>
+                                                        <p:commandButton id="btnEliminar" value="Eliminar" icon="ui-icon-trash" action="#{mbFumigacion.borrar()}" disabled="#{empty mbFumigacion.seleccionado}" onclick="return confirm('Seguro desea eliminar la fumigación identificada con el id #{mbFumigacion.seleccionado.idfumigacion}');document.reload()" update="formTabla"/>
+                                                    </center>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </f:facet>
+
+                        </p:dataTable>
+                    </h:form>
+
+                    <!--DIALOGOS ACTUALIZAR-->
+                    <center>
+                        <h:form id="FormActualizar">  
+                            <p:dialog header="Ingrese los Datos" widgetVar="dlg3" showEffect="explode" hideEffect="explode" height="205" resizable="false" minimizable="true">
+                                <p:outputPanel id="actualizar" style="text-align:center;">
+                                    <table border="0">
+                                        <tbody>
+                                            <tr style="color: orange">#{mbFumigacion.seleccionado.idfumigacion}</tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uffumi" value="Fecha Fumigación"/></td>
+                                                <td><p:calendar id="Uffumi" value="#{mbFumigacion.seleccionado.fechafumigacion}" locale="es" navigator="true" pattern="yyyy-MM-dd" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uhrfumi" value="Hora Fumigación"/></td>
+                                                <td><p:calendar id="Uhrfumi" value="#{mbFumigacion.seleccionado.horafumigacion}" locale="es" pattern="HH:mm" timeOnly="true"  /></td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Upf" value="Producto"/></td>
+                                                <td><p:inputText id="Upf" title="Upf" value="#{mbFumigacion.seleccionado.nombreproducto}" placeholder="¿Que insecticida?" maxlength="200" required="true">
+                                                        <f:validateLength minimum="2" maximum="19"/>
+                                                    </p:inputText>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><p:outputLabel for="Uidc" value="Sembrado"/></td>
+                                                <td>
+                                                    <center>
+                                                        <p:outputLabel id="Uidc" title="Uidc" value="#{mbFumigacion.seleccionado.idcosecha.idcosecha}"/>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><p:commandButton icon="ui-icon-pencil" value="Actualizar Fumigación" actionListener="#{mbFumigacion.actualizar(mbFumigacion.seleccionado.idfumigacion)}" onclick="document.reload()" update="formTabla"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>      
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </center>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

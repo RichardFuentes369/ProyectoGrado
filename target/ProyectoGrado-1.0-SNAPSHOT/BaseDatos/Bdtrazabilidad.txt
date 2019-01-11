@@ -1,0 +1,85 @@
+CREATE TABLE tipousuario (
+    idtu numeric NOT NULL,
+    nombretu character varying(20),
+    caracteristicas character varying(50),
+    constraint pk_tipo_usuario primary key (idtu)
+);
+
+CREATE TABLE usuario (
+    cc_usuario character varying(30) NOT NULL,
+    nombresusuario character varying(50),
+    apellidosusuario character varying(50),
+    usernamelogin character varying(20),
+    passwordlogin character varying(30),
+    telefonousuario character varying(20),
+    celularusuario character varying(20),
+    correoelectronico character varying(80),
+    idtu numeric,
+    constraint pk_usuario primary key (cc_usuario),
+    constraint fk_tipousuario foreign key (idtu) references tipousuario on delete cascade on update cascade
+);
+
+CREATE TABLE email (
+    cc_userdestinatario character varying(30),
+    cc_userdestino character varying(30) NOT NULL,
+    mensaje character varying(900),
+    idemail serial,
+    fecha date,
+    hora time with time zone,
+    constraint pk_email primary key (idemail),
+    constraint fk_usuario foreign key (cc_userdestinatario) references usuario on delete cascade on update cascade
+);
+
+CREATE TABLE finca (
+    idfinca serial,
+    nombrefinca character varying(50),
+    nitfinca character varying(15) NOT NULL,
+    departamento character varying(15),
+    provincia character varying(15),
+    vereda character varying(15),
+    direccion character varying(50),
+    nombredueno character varying(50),
+    telefono character varying(15),
+    cc_user character varying(30) DEFAULT 0 NOT NULL,
+    municipio character varying(15),
+    constraint pk_finca primary key (nitfinca),
+    constraint fk_usuario foreign key (cc_user) references usuario on delete cascade on update cascade
+);
+
+CREATE TABLE cosecha (
+    idcosecha serial,
+    fechasembrado date,
+    fecharecoleccion date,
+    nitfinca character varying(15),
+    horasembrado time without time zone,
+    horarecoleccion time without time zone,
+    cantidad real,
+    estado boolean,
+    constraint pk_cosecha primary key (idcosecha),
+    constraint fk_finca foreign key (nitfinca) references finca on delete cascade on update cascade
+);
+
+CREATE TABLE fumigacion (
+    idfumigacion serial,
+    fechafumigacion date,
+    nombreproducto character varying(200),
+    idcosecha integer,
+    horafumigacion time without time zone,
+    constraint pk_fumigacion primary key (idfumigacion),
+    constraint fk_cosecha foreign key (idcosecha) references cosecha on delete cascade on update cascade
+);
+
+CREATE TABLE transporte (
+    idtransporte serial,
+    fechasalida date,
+    temperatura character varying(3),
+    descripcion character varying(300),
+    idcosecha integer,
+    fechallegada date,
+    tiempollegada time without time zone,
+    tiemporecogida time without time zone,
+    tiemposalida time without time zone,
+    constraint pk_transporte primary key (idtransporte),
+    constraint fk_cosecha foreign key (idcosecha) references cosecha on delete cascade on update cascade
+);
+

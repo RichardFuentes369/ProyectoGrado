@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72fd7c37-3d8d-4742-971f-d369d6e9c0fa">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="20"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+                finca."nombrefinca" AS finca_nombrefinca,
+                finca."nitfinca" AS finca_nitfinca,
+     fumigacion."idfumigacion" AS fumigacion_idfumigacion,
+     fumigacion."fechafumigacion" AS fumigacion_fechafumigacion,
+     fumigacion."nombreproducto" AS fumigacion_nombreproducto,
+     fumigacion."idcosecha" AS fumigacion_idcosecha,
+     fumigacion."horafumigacion" AS fumigacion_horafumigacion
+FROM
+     "public"."fumigacion","public"."cosecha","public"."finca","public"."usuario" 
+        WHERE fumigacion.idcosecha = cosecha.idcosecha
+	AND cosecha.nitfinca = finca.nitfinca AND finca.cc_user = usuario.cc_usuario 
+        AND usuario.cc_usuario = $P{usuario}]]>
+	</queryString>
+	<field name="finca_nombrefinca" class="java.lang.String"/>
+	<field name="finca_nitfinca" class="java.lang.String"/>
+	<field name="fumigacion_idfumigacion" class="java.lang.Integer"/>
+	<field name="fumigacion_fechafumigacion" class="java.sql.Date"/>
+	<field name="fumigacion_nombreproducto" class="java.lang.String"/>
+	<field name="fumigacion_idcosecha" class="java.lang.Integer"/>
+	<field name="fumigacion_horafumigacion" class="java.sql.Time"/>
+	<group name="fumigacion_idcosecha">
+		<groupExpression><![CDATA[$F{fumigacion_idcosecha}]]></groupExpression>
+		<groupHeader>
+			<band height="43">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="100" height="21" forecolor="#666666" backcolor="#E6E6E6" uuid="ef3090e9-0fa9-40a2-bf80-3e823fbb6836"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Nombre Finca]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="0" width="455" height="21" forecolor="#006699" backcolor="#E6E6E6" uuid="1f6cd105-ce5f-483a-aece-6b37a87eb7f6"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{finca_nombrefinca}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="42" width="555" height="1" forecolor="#666666" uuid="31823899-3f84-44dd-a77d-ad8cc1196c69"/>
+				</line>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="21" width="100" height="21" forecolor="#666666" backcolor="#E6E6E6" uuid="93b1e2e9-8057-4847-a3d5-4f177315d675"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[NIT Finca]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="21" width="455" height="21" forecolor="#006699" backcolor="#E6E6E6" uuid="2c6f632c-971c-42a0-889e-75ddc8cddbfe"/>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{finca_nitfinca}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="48">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="68" backcolor="#870235" uuid="5ee3a49c-9300-40db-9ae0-c3551e589db9"/>
+				<staticText>
+					<reportElement x="20" y="20" width="234" height="24" forecolor="#FFFFFF" uuid="091b0a97-fd34-44e6-a3d3-73d12870c562"/>
+					<textElement>
+						<font size="18" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mis Fumigaciones]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="328" y="44" width="247" height="20" forecolor="#FFFFFF" uuid="422034bf-13d7-47cb-9fe3-8d504f4e82c9"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sistema de trazabilidad de la mora]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" forecolor="#666666" uuid="4661d0a5-cf4a-496f-993b-e8d8205ae6c5"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="122" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="9d4505d2-67c6-4a3f-8246-46e93e81c1a0"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fumigación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="122" y="0" width="127" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="35b96229-db74-417c-bcf4-fe0b33865a8d"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F. Fumigación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="425" y="0" width="130" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="cfc39229-cc11-469f-a04d-52dbca9aa320"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hr. Fumigación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="249" y="0" width="176" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="5c8dd8e4-64e1-41af-865a-32217c59b00d"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Producto(s)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement x="122" y="0" width="127" height="20" uuid="04a226be-567b-422e-9fd7-fd675792344b"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fumigacion_fechafumigacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="HH.mm">
+				<reportElement x="425" y="0" width="127" height="20" uuid="9838188b-a66d-4068-bfe2-e4f91e706296"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fumigacion_horafumigacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="249" y="0" width="176" height="20" uuid="a1485649-d717-4d14-bee8-58374cd5d984"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fumigacion_nombreproducto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="122" height="20" uuid="c698f155-5eb5-4cb0-8418-462522575215"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fumigacion_idfumigacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="e036dd16-76e8-4491-aa58-9a992ee3005c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="34eeb21a-0335-4ad1-9422-3d5177616b7d"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="2a556e92-18d3-4aaa-81fc-5331b302b55c"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
